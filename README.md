@@ -13,15 +13,27 @@ AI 기반 실내 공기질 예측 및 자동 환기 디지털 트윈.
 
 - [개발 계획서](docs/PLAN.md)
 - [개발 일지](docs/DEVLOG.md)
+- [Windows 환경 설정 및 다른 PC에서 작업 이어가기](docs/SETUP.md)
 
-## 현재 상태
+## 현재 상태 (2026-11-25)
 
-2026-11-25: 로컬 Python 환경 설치와 사용자 설계 결정 완료. 시뮬레이터 코드는 대화에서 초안을 제시했으나 아직 저장소에 구현/실행 검증하지 않았다. AWS 리소스는 아직 생성하지 않았다.
+- 로컬 Python 환경 설치 및 설계 결정 완료 (사용자 확인).
+- [센서 시뮬레이터](hw2/simulation.py) 초안과 기본 단위 테스트 등록. 아직 실제 실행 결과 미확보.
+- AI 학습, 제어 비교, AWS 배포 및 시각화는 미구현.
+- LSTM은 필수 구현과 제출물 확보 이후에만 검토.
 
-## 개발 환경
+## 빠른 시작 (Windows PowerShell)
 
-Windows, VS Code, Python 3.13, numpy, pandas, scikit-learn, matplotlib. Windows에서는 `py -3.13`으로 실행한다. AWS Lambda는 Python 3.12와 호환되는 배포 방식을 사용한다.
+```powershell
+git clone https://github.com/darkkyoung/Ajou_AIoT.git
+cd Ajou_AIoT
+py -3.13 -m pip install -r hw2/requirements.txt
+py -3.13 hw2/simulation.py
+py -3.13 -m unittest discover -s hw2 -p "test_*.py"
+```
+
+다른 Python 프로젝트와 분리하려면 SETUP.md의 가상환경 방식을 사용한다. 생성된 CSV는 hw2/data/sensor_data.csv에 저장된다. 예상 기록 수는 10,800개이며, 실행 후 실제 결과를 확인한다. Lambda 배포는 Python 3.12와 호환되는 순수 Python 추론을 우선 고려한다.
 
 ## 저장소 관리
 
-단계마다 코드, 설정 템플릿, 테스트 결과, 설계 변경사항을 커밋한다. 실제 AWS 인증 정보, 개인 식별 정보, 학번, 로컬 절대 경로, 원본 강의 자료, 제출용 PDF/영상은 공개 저장소에 올리지 않는다. 예제 모델 및 모의 데이터는 실제 측정값으로 취급하지 않는다.
+단계마다 코드, 설정 템플릿, 테스트 결과, 설계 변경사항을 커밋한다. 실제 AWS 인증 정보, 개인 식별 정보, 학번, 로컬 절대 경로, 원본 강의 자료, 제출용 PDF/영상은 공개 저장소에 올리지 않는다. 모의 데이터는 실제 측정값으로 취급하지 않는다.
