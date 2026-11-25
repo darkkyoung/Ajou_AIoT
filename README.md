@@ -19,8 +19,9 @@ AI 기반 실내 공기질 예측 및 자동 환기 디지털 트윈.
 
 - 로컬 Python 환경 설치 및 설계 결정 완료 (사용자 확인).
 - [센서 시뮬레이터](hw2/simulation.py) 구현 및 Python 3.13.5 테스트 환경 검증 완료 (7/7). 사용자 Windows에서도 7/7 통과 확인.
-- AI 학습 및 JSON 내보내기 검증 완료 (Linux). Random Forest 선정. [STEP 3 결과](docs/STEP3_RESULTS.md). 사용자 Windows 재현 확인 필요.
-- 제어 비교, AWS 배포 및 시각화는 미구현.
+- AI 학습 및 JSON 내보내기 검증 완료 (Linux). Random Forest 선정. [STEP 3 결과](docs/STEP3_RESULTS.md). 사용자 Windows에서도 RF 선정 및 JSON parity 확인 완료 (sklearn 1.9.1).
+- 폐루프 환기 제어 및 비교 실험 Linux 검증 완료. [STEP 4 결과](docs/STEP4_RESULTS.md). Windows 재현 확인 필요.
+- AWS 배포 및 시각화는 미구현.
 - LSTM은 필수 구현과 제출물 확보 이후에만 검토.
 
 ## 빠른 시작 (Windows PowerShell)
@@ -46,3 +47,13 @@ py -3.13 hw2/train.py
 ```
 
 hw2/models/selected_model.json 및 hw2/results/step3/metrics.json, test_predictions.csv, model_mae.png, predictions.png 생성. 모델은 학습으로 재생성한다. LSTM 보류.
+
+## STEP 4 실행
+
+```powershell
+py -3.13 hw2/evaluate.py
+py -3.13 -m unittest discover -s hw2 -p "test_*.py" -v
+py -3.13 hw2/control.py --mode demo --steps 3
+```
+
+STEP 3의 selected_model.json 필요. 결과는 hw2/results/step4/. control.py의 live/demo는 로컬 폐루프 모드이며 AWS 기능은 아니다.

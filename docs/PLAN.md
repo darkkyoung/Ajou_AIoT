@@ -108,3 +108,7 @@ hw2/
 ## STEP 3 확정 (LSTM 보류)
 
 70/15/15 episode 분할, seed 2026. LR 기본 설정, RF 64개 트리, depth 12, min_samples_leaf 2. Validation MAE로 선택. Precision/Recall도 기록. 모의 환경 정답 계산식은 oracle 검증에만 사용. RF 선택 결과 및 순수 Python 추론 parity는 [STEP3_RESULTS.md](STEP3_RESULTS.md) 참조. STEP 4 폐루프 비교 및 AWS 실제 배포는 미완료.
+
+## STEP 4 구현 결과
+
+현재 합의된 20/60/100% 규칙 유지. 20회 x 2공간 x 90분 비교 실험에 독립 시드 300000을 사용. 실제 결과 및 제어 변경 증가 한계는 [STEP4_RESULTS.md](STEP4_RESULTS.md) 참조. 향후 개선 후보: 히스테리시스 및 최소 유지시간. AWS에서는 직전 출력과 결정 출력, 관측/가상 시각, 예측값 및 상태를 구분하고 상태 연속성을 보존한다. STEP 5 전까지 AWS 미생성.

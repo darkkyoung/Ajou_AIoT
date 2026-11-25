@@ -98,3 +98,16 @@ py -3.13 hw2/train.py
 ```
 
 추가 패키지 설치 불필요. hw2/results/step3/metrics.json에서 분할, 모델 평가, 선택 모델 및 export parity 확인. model_mae.png와 predictions.png는 보고서 증빙. hw2/models/selected_model.json은 다음 STEP 4에서 사용. 새 PC에서는 다시 학습하여 생성한다. scikit-learn 버전 차이로 결과에 차이가 날 수 있으며 기준 검증 환경은 Python 3.13.5/sklearn 1.8.0이다. AWS 실제 추론은 이후 검증한다.
+
+## 8. STEP 4 제어 실험
+
+저장소 루트에서 실행. 새 PC는 먼저 simulation.py 및 train.py 실행하여 모델 생성.
+
+```powershell
+git pull --ff-only origin main
+py -3.13 hw2/evaluate.py
+py -3.13 -m unittest discover -s hw2 -p "test_*.py" -v
+py -3.13 hw2/control.py --mode demo --steps 3
+```
+
+실험 결과는 hw2/results/step4/에 생성. 로컬 live는 --mode live, 60초 간격. demo는 10초 간격. 시작 기록 즉시 출력, 이후 1분의 가상 시뮬레이션을 진행한다. 실제 센서/클라우드 제어는 아직 없음. git pull 기본 명령에서 multiple branches 오류가 나면 origin main을 명시하고 설정은 강제로 변경하지 않는다.

@@ -35,3 +35,7 @@
 모의 환경 정답은 알려진 수식으로 생성되므로 그 수식을 직접 계산하는 oracle은 MAE 0이다. 이는 실측 환경에 대한 예측 정확도 증거가 아니다. 학습 모델은 과제용 모의 환경의 비선형 매핑을 근사하는 역할이다. 실제 제어 뒤 농도는 조건부 예측과 달라질 수 있다. RF가 학습 분포 외에서 더 정확하다는 보장은 없으며 STEP 4의 폐루프 실험이 필요하다.
 
 생성 CSV, 그래프, 모델 JSON은 재현 가능하며 gitignore 대상. Windows에서 재실행 후 버전 차이와 결과를 확인한다. 코드 blob: train.py 14f38226b4e3e3a2761a793f05586e385b9ea631, inference.py 0cb259b4e0dfd56193b75b0890ecd2039fac9505.
+
+## 사용자 Windows 재현 결과
+
+4537c9f에서 Python 3.13/sklearn 1.9.1, train.py 성공. RF Validation MAE 6.01684649, Test MAE 7.25767064, RMSE 13.24438087, R² .99790764, precision .98290598, recall .98797251, TN/FP/FN/TP 1028/10/7/575. LR/persistence는 기존 환경과 거의 동일. RF 선택 및 JSON parity 통과 (최대 차이 1.1368683772161603e-12 ppm). 모델 6275715 bytes. 보고서는 사용자가 실제 재현하고 배포하는 모델 버전의 결과를 우선 사용한다.

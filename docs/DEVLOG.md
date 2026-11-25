@@ -49,3 +49,9 @@ STEP 2: simulation.py 작성 및 센서 기록 생성, 범위/단위/재현성/�
 - 사용자 결정: LSTM 보류, Linear Regression과 Random Forest만 학습; persistence 기준 포함.
 - Linux Python 3.13.5/sklearn 1.8.0에서 시뮬레이터 blob 동일 확인, train.py 실제 실행 완료. Validation MAE LR 18.3910, RF 6.0211; test MAE persistence 65.1469, LR 21.8539, RF 7.2327 ppm. RF 선정. JSON 추론 parity 양 모델 통과 (1e-6ppm 허용). RF 6,275,951 bytes. 상세 지표, 분할 및 한계는 STEP3_RESULTS.md.
 - Windows STEP 3 실행 및 AWS는 미검증. 모델과 CSV, 그래프는 로컬에서 생성하며 공개 저장소에 커밋하지 않는다. 다음 STEP 4: 동일 외생 시나리오 폐루프 제어 비교 및 최종 대응 로직 검증.
+
+## STEP 3 Windows 확인 / STEP 4 구현
+
+- 사용자 Windows: 4537c9f 동기화 및 train.py 성공, sklearn 1.9.1. RF test MAE 7.2577, RMSE 13.2444, R2 .9979076, RF 선정 및 export parity 통과. 이전 Git pull 오류는 origin main 명시로 우회.
+- control.py, evaluate.py, test_control.py 추가. 동일 외생 입력의 20회 쌍대 비교, 정책별 3600행. Linux Python 3.13.5/sklearn 1.8.0에서 RF 재생성(기존 설정), 평가 실행 및 신규 단위 테스트 3/3, demo 1스텝 성공. 기준 이상 1130->994분, 초과 ppm-min 17134.94->14102.03, 평균 환기 +0.70%p, 출력 변경 1440->1732. 상세 STEP4_RESULTS.md.
+- 원래 제어 규칙을 유지; 빈번한 전환 문제는 한계로 기록. Windows STEP 4 재현 및 전체 테스트, 실제 대기 시간 확인 필요. AWS 미생성. 다음: HW1 백업 참고 및 STEP 5 AWS 구현.
