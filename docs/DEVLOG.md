@@ -32,3 +32,13 @@ STEP 2: simulation.py 작성 및 센서 기록 생성, 범위/단위/재현성/�
 - 계획서 단계별 합계 약 10~16시간; 오류와 재검증 포함 개인 작업 예산은 14~18시간(2~3일 집중 작업). 11/27까지 핵심 구현, 11/28~29 검증·영상·보고서, 11/30 23:59 KST 이전 제출 목표.
 - 다음 명령: `py -3.13 hw2/simulation.py`, `py -3.13 -m unittest discover -s hw2 -p "test_*.py"`.
 - 5분 조건부 예측 타깃 생성, episode 분할, 모델 학습은 다음 단계에서 구현한다.
+
+## 2026-11-25 — STEP 2 구현 및 테스트
+
+- 사용자 결정 Q1 B: 공간별 이용 패턴 분리. Q2 C: 실제 시간과 가속 모드. Q3 A: 현재 인원 및 환기 유지 가정.
+- simulation.py: 공간별 profile, 상태 연속성, 현재-직전 CO₂ 차이, 5분 조건부 정답, batch/live/demo CLI 구현. 로컬 clock은 live 60초/demo 10초 주기, 기록 시각과 가상 시각 분리.
+- Python 3.13.5 Linux 테스트 환경에서 실행. sensor_data.csv 및 training_data.csv 각각 10,800행 생성, 고유 episode/room/minute 조합 10,800개. unittest 7/7 통과(0.257초). 시간 모드 테스트는 모의 clock 사용, 실제 대기 시간 및 Windows/AWS 동작은 아직 미확인.
+- 실제 생성값: 강의실 5,400행, 431.69~1708.35 ppm, 1000ppm 이상 1329행, 현재 1000 미만/조건부 5분 후 1000 이상 290행. 컴퓨터실 5,400행, 451.04~1732.87 ppm, 1000ppm 이상 1761행, 조건부 초과 예정 351행.
+- 모델 성능이나 제어 효과로 해석하지 않는다. 타깃은 동일 시뮬레이터에서 노이즈 없이 생성한 조건부 정답이며 현실 측정값이 아니다. 학습 시 episode ID, room ID, minute, scenario, target을 입력에서 제외하고 명시된 수치 feature만 사용한다.
+- 코드 blob 검증 기준: simulation.py 34c8e880b1907dd4aef98da4ec821c57fa1f7bfe, test_simulation.py 477cd09c25f63d14e6949b4ed67cdcd36e80a861.
+- 다음: 사용자 Windows에서 pull 및 batch/test 확인. STEP 3에서 episode 기준 분리, LR/RF/persistence 학습 및 비교. 현재 환기 출력은 학습 탐색용 무작위 값이며 AI 제어 및 AWS는 미구현.

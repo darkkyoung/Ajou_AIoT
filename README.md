@@ -18,7 +18,7 @@ AI 기반 실내 공기질 예측 및 자동 환기 디지털 트윈.
 ## 현재 상태 (2026-11-25)
 
 - 로컬 Python 환경 설치 및 설계 결정 완료 (사용자 확인).
-- [센서 시뮬레이터](hw2/simulation.py) 초안과 기본 단위 테스트 등록. 아직 실제 실행 결과 미확보.
+- [센서 시뮬레이터](hw2/simulation.py) 구현 및 Python 3.13.5 테스트 환경 검증 완료 (7/7). 사용자 Windows 실행 확인 필요.
 - AI 학습, 제어 비교, AWS 배포 및 시각화는 미구현.
 - LSTM은 필수 구현과 제출물 확보 이후에만 검토.
 
@@ -32,7 +32,7 @@ py -3.13 hw2/simulation.py
 py -3.13 -m unittest discover -s hw2 -p "test_*.py"
 ```
 
-다른 Python 프로젝트와 분리하려면 SETUP.md의 가상환경 방식을 사용한다. 생성된 CSV는 hw2/data/sensor_data.csv에 저장된다. 예상 기록 수는 10,800개이며, 실행 후 실제 결과를 확인한다. Lambda 배포는 Python 3.12와 호환되는 순수 Python 추론을 우선 고려한다.
+다른 Python 프로젝트와 분리하려면 SETUP.md의 가상환경 방식을 사용한다. 생성 CSV는 hw2/data/sensor_data.csv 및 hw2/data/training_data.csv이며 각각 10,800행 검증 완료. 로컬 시계 모드: `py -3.13 hw2/simulation.py --mode demo --steps 3` (10초 간격), `--mode live` (60초 간격). 아직 AI 제어나 AWS 연동은 아니다. Lambda 배포는 Python 3.12와 호환되는 순수 Python 추론을 우선 고려한다.
 
 ## 저장소 관리
 

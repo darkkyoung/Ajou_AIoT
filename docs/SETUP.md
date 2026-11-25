@@ -74,3 +74,17 @@ VS Code에서 Ctrl+Shift+P → Python: Select Interpreter로 사용할 인터프
 6. HW1의 ExecuteQuery 권한 오류와 S3 CORS 문제를 사전에 점검한다. AWS 자원 생성·삭제는 단계별로 확인한다.
 
 현재는 로컬 시뮬레이터 단계이며 AWS 배포 코드/실제 클라우드 검증은 아직 준비되지 않았다. 영상과 보고서 증빙 확보 후에만 AWS 정리 작업을 진행한다.
+
+## 6. STEP 2 시뮬레이터 실행 모드
+
+저장소 루트에서 다음 명령 실행 (가상환경 사용 시 Python 실행 경로만 변경).
+
+```powershell
+git pull --ff-only
+py -3.13 hw2/simulation.py
+py -3.13 -m unittest discover -s hw2 -p "test_*.py" -v
+py -3.13 hw2/simulation.py --mode demo --steps 3
+py -3.13 hw2/simulation.py --mode live --steps 2
+```
+
+batch는 센서 기록과 5분 조건부 정답 CSV 각각 10,800행을 생성한다. demo는 첫 기록 즉시 출력 후 10초 간격, live는 60초 간격이며 두 공간의 JSON을 콘솔로 출력한다. steps는 공간별 기록 수다. 시계 모드는 AI 제어 또는 AWS 연동이 아니라 로컬 센서 시연이다. Ctrl+C로 중단 가능. 생성 CSV는 Git에서 제외하고 다시 생성한다.
