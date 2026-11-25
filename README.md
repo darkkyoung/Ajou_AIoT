@@ -18,8 +18,9 @@ AI 기반 실내 공기질 예측 및 자동 환기 디지털 트윈.
 ## 현재 상태 (2026-11-25)
 
 - 로컬 Python 환경 설치 및 설계 결정 완료 (사용자 확인).
-- [센서 시뮬레이터](hw2/simulation.py) 구현 및 Python 3.13.5 테스트 환경 검증 완료 (7/7). 사용자 Windows 실행 확인 필요.
-- AI 학습, 제어 비교, AWS 배포 및 시각화는 미구현.
+- [센서 시뮬레이터](hw2/simulation.py) 구현 및 Python 3.13.5 테스트 환경 검증 완료 (7/7). 사용자 Windows에서도 7/7 통과 확인.
+- AI 학습 및 JSON 내보내기 검증 완료 (Linux). Random Forest 선정. [STEP 3 결과](docs/STEP3_RESULTS.md). 사용자 Windows 재현 확인 필요.
+- 제어 비교, AWS 배포 및 시각화는 미구현.
 - LSTM은 필수 구현과 제출물 확보 이후에만 검토.
 
 ## 빠른 시작 (Windows PowerShell)
@@ -37,3 +38,11 @@ py -3.13 -m unittest discover -s hw2 -p "test_*.py"
 ## 저장소 관리
 
 단계마다 코드, 설정 템플릿, 테스트 결과, 설계 변경사항을 커밋한다. 실제 AWS 인증 정보, 개인 식별 정보, 학번, 로컬 절대 경로, 원본 강의 자료, 제출용 PDF/영상은 공개 저장소에 올리지 않는다. 모의 데이터는 실제 측정값으로 취급하지 않는다.
+
+## STEP 3 실행
+
+```powershell
+py -3.13 hw2/train.py
+```
+
+hw2/models/selected_model.json 및 hw2/results/step3/metrics.json, test_predictions.csv, model_mae.png, predictions.png 생성. 모델은 학습으로 재생성한다. LSTM 보류.

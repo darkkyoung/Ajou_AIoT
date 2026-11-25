@@ -104,3 +104,7 @@ hw2/
 ```
 
 필요한 파일만 단계별 추가한다. 공개 저장소이므로 인증 정보, 학번, 개인 경로, 원본 과제 자료, 제출용 영상과 보고서는 업로드 대상에서 제외한다. 실제 실험 결과는 실행 확인 후 기록한다.
+
+## STEP 3 확정 (LSTM 보류)
+
+70/15/15 episode 분할, seed 2026. LR 기본 설정, RF 64개 트리, depth 12, min_samples_leaf 2. Validation MAE로 선택. Precision/Recall도 기록. 모의 환경 정답 계산식은 oracle 검증에만 사용. RF 선택 결과 및 순수 Python 추론 parity는 [STEP3_RESULTS.md](STEP3_RESULTS.md) 참조. STEP 4 폐루프 비교 및 AWS 실제 배포는 미완료.

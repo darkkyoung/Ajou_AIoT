@@ -88,3 +88,13 @@ py -3.13 hw2/simulation.py --mode live --steps 2
 ```
 
 batch는 센서 기록과 5분 조건부 정답 CSV 각각 10,800행을 생성한다. demo는 첫 기록 즉시 출력 후 10초 간격, live는 60초 간격이며 두 공간의 JSON을 콘솔로 출력한다. steps는 공간별 기록 수다. 시계 모드는 AI 제어 또는 AWS 연동이 아니라 로컬 센서 시연이다. Ctrl+C로 중단 가능. 생성 CSV는 Git에서 제외하고 다시 생성한다.
+
+## 7. STEP 3 모델 학습
+
+```powershell
+git pull --ff-only
+py -3.13 hw2/simulation.py
+py -3.13 hw2/train.py
+```
+
+추가 패키지 설치 불필요. hw2/results/step3/metrics.json에서 분할, 모델 평가, 선택 모델 및 export parity 확인. model_mae.png와 predictions.png는 보고서 증빙. hw2/models/selected_model.json은 다음 STEP 4에서 사용. 새 PC에서는 다시 학습하여 생성한다. scikit-learn 버전 차이로 결과에 차이가 날 수 있으며 기준 검증 환경은 Python 3.13.5/sklearn 1.8.0이다. AWS 실제 추론은 이후 검증한다.

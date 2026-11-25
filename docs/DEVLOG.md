@@ -42,3 +42,10 @@ STEP 2: simulation.py 작성 및 센서 기록 생성, 범위/단위/재현성/�
 - 모델 성능이나 제어 효과로 해석하지 않는다. 타깃은 동일 시뮬레이터에서 노이즈 없이 생성한 조건부 정답이며 현실 측정값이 아니다. 학습 시 episode ID, room ID, minute, scenario, target을 입력에서 제외하고 명시된 수치 feature만 사용한다.
 - 코드 blob 검증 기준: simulation.py 34c8e880b1907dd4aef98da4ec821c57fa1f7bfe, test_simulation.py 477cd09c25f63d14e6949b4ed67cdcd36e80a861.
 - 다음: 사용자 Windows에서 pull 및 batch/test 확인. STEP 3에서 episode 기준 분리, LR/RF/persistence 학습 및 비교. 현재 환기 출력은 학습 탐색용 무작위 값이며 AI 제어 및 AWS는 미구현.
+
+## STEP 2 Windows 검증 / STEP 3 모델 학습
+
+- 사용자 데스크톱에서 d732028 확인, CSV 두 종류 생성, unittest 7/7 통과 (0.171s). Python 패키지 import SUCCESS.
+- 사용자 결정: LSTM 보류, Linear Regression과 Random Forest만 학습; persistence 기준 포함.
+- Linux Python 3.13.5/sklearn 1.8.0에서 시뮬레이터 blob 동일 확인, train.py 실제 실행 완료. Validation MAE LR 18.3910, RF 6.0211; test MAE persistence 65.1469, LR 21.8539, RF 7.2327 ppm. RF 선정. JSON 추론 parity 양 모델 통과 (1e-6ppm 허용). RF 6,275,951 bytes. 상세 지표, 분할 및 한계는 STEP3_RESULTS.md.
+- Windows STEP 3 실행 및 AWS는 미검증. 모델과 CSV, 그래프는 로컬에서 생성하며 공개 저장소에 커밋하지 않는다. 다음 STEP 4: 동일 외생 시나리오 폐루프 제어 비교 및 최종 대응 로직 검증.
