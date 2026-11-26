@@ -112,3 +112,7 @@ hw2/
 ## STEP 4 구현 결과
 
 현재 합의된 20/60/100% 규칙 유지. 20회 x 2공간 x 90분 비교 실험에 독립 시드 300000을 사용. 실제 결과 및 제어 변경 증가 한계는 [STEP4_RESULTS.md](STEP4_RESULTS.md) 참조. 향후 개선 후보: 히스테리시스 및 최소 유지시간. AWS에서는 직전 출력과 결정 출력, 관측/가상 시각, 예측값 및 상태를 구분하고 상태 연속성을 보존한다. STEP 5 전까지 AWS 미생성.
+
+## STEP 5 사전 설계
+
+S3 단일 tick 객체에 두 공간의 현재 기록과 다음 상태를 저장한다. 단일 writer/reserved concurrency 1 및 조건부 PutObject로 중복을 방지한다. 별도 상태 파일을 만들지 않는다. 로컬 배포 ZIP과 GLB 생성, fake-S3 통합 테스트 계획은 [STEP5_PREP.md](STEP5_PREP.md) 참고. AWS 실제 동작은 배포 후 검증.

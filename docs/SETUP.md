@@ -111,3 +111,7 @@ py -3.13 hw2/control.py --mode demo --steps 3
 ```
 
 실험 결과는 hw2/results/step4/에 생성. 로컬 live는 --mode live, 60초 간격. demo는 10초 간격. 시작 기록 즉시 출력, 이후 1분의 가상 시뮬레이션을 진행한다. 실제 센서/클라우드 제어는 아직 없음. git pull 기본 명령에서 multiple branches 오류가 나면 origin main을 명시하고 설정은 강제로 변경하지 않는다.
+
+## 9. STEP 5 AWS 접속 전 준비
+
+[STEP5_PREP.md](STEP5_PREP.md)의 Windows 테스트 및 build_package.py 실행 절차를 따른다. 원본 에셋 ZIP은 각 PC에서 경로를 지정한다. AWS 자격증명이나 계정 ID는 필요 없다. 생성된 dist 폴더는 로컬에 보존한다.

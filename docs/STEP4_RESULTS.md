@@ -38,3 +38,7 @@
 - Windows STEP 3 사용자 실행: sklearn 1.9.1, RF test MAE 7.25767064, RMSE 13.24438087, R2 .99790764, TN/FP/FN/TP 1028/10/7/575. Validation MAE 6.01684649, JSON parity 1.1368683772161603e-12 ppm. 모델 6275715 bytes. Windows STEP 4 결과는 별도 확인 필요.
 - 코드 blob: control.py 3b9e317edc8d749d1c8a28385f08ecc242b37383, evaluate.py a5462fec4adeefe323f1b25037b3428ad7052e35, test_control.py 9f6015b273a699132643002979a3f4ead19f86d4.
 - 생성 결과: hw2/results/step4/control_metrics.json, control_timeseries.csv, classroom-01.png, computerlab-01.png. 재현 가능한 로컬 파일은 gitignore 유지.
+
+## 사용자 Windows 최종 검증
+
+381dca7에서 evaluate.py와 전체 unittest 10/10 PASS(0.176s), demo 3 tick(두 공간, 10초 실제 간격) 성공. 모델 SHA256 565da9378788149d6b10d70e61544caaef0ccf0694263de1abe9d68831d80405. 제어 결과는 위 전체/공간별 수치와 동일. demo 3 tick은 모두 normal; 사전/강화 환기는 전체 비교 실험에서 관찰됨. AWS 미검증.

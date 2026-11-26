@@ -20,3 +20,6 @@ hw2/assets/
 *.pdf
 *.docx
 .DS_Store
+
+# Local deployment packages and assets
+hw2/aws/dist/
