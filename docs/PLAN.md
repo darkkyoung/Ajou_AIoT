@@ -116,3 +116,7 @@ hw2/
 ## STEP 5 사전 설계
 
 S3 단일 tick 객체에 두 공간의 현재 기록과 다음 상태를 저장한다. 단일 writer/reserved concurrency 1 및 조건부 PutObject로 중복을 방지한다. 별도 상태 파일을 만들지 않는다. 로컬 배포 ZIP과 GLB 생성, fake-S3 통합 테스트 계획은 [STEP5_PREP.md](STEP5_PREP.md) 참고. AWS 실제 동작은 배포 후 검증.
+
+## STEP 5 동시성 설계 변경
+
+계정 예약 동시 실행 설정 실패로 S3 조건부 잠금으로 대체. 기존 journal 유지. [동시성 보완 및 검증 절차](STEP5_CONCURRENCY.md) 참고.

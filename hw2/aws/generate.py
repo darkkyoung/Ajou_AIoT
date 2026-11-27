@@ -2,6 +2,7 @@
 import json
 import os
 import random
+import uuid
 from datetime import datetime, timedelta, timezone
 from functools import lru_cache
 from pathlib import Path
@@ -12,9 +13,29 @@ from inference import load_model
 from simulation import get_occupancy
 
 STATUS_CODES = {"normal": 0, "warning": 1, "high": 2}
+LOCK_KEY = "sensor-data/locks/generate.lock"
 
 
 def tick(s3, bucket, model, event, now):
+    """Serialize all slots, not just duplicate timestamps, using an S3 mutex."""
+    owner = {"owner": uuid.uuid4().hex, "acquired_at": iso(datetime.now(timezone.utc))}
+    try:
+        lock = s3.put_object(Bucket=bucket, Key=LOCK_KEY,
+                             Body=json.dumps(owner).encode(),
+                             ContentType="application/json", IfNoneMatch="*")
+    except Exception as exc:
+        if error_code(exc) in ("412", "PreconditionFailed", "409", "ConditionalRequestConflict"):
+            return {"result": "busy", "reason": "generator_lock"}
+        raise
+    # Fail closed: never steal an existing lock automatically. If a runtime is
+    # killed before cleanup, an operator must stop all writers before recovery.
+    try:
+        return _tick_locked(s3, bucket, model, event, now)
+    finally:
+        s3.delete_object(Bucket=bucket, Key=LOCK_KEY, IfMatch=lock["ETag"])
+
+
+def _tick_locked(s3, bucket, model, event, now):
     mode = event.get("mode", "live")
     if mode not in ("live", "demo"):
         raise ValueError("mode must be live or demo")
@@ -24,7 +45,7 @@ def tick(s3, bucket, model, event, now):
         raise ValueError("Future scheduled time")
     slot = datetime.fromtimestamp(int(requested.timestamp()) // interval * interval, timezone.utc)
     key = key_for(slot)
-    # Single writer required: Lambda reserved concurrency=1; no other writers.
+    # The mutex protects the full read-compute-write sequence. No other writers.
     latest_key = max(keys(s3, bucket), default=None)
     if latest_key is not None and key <= latest_key:
         return {"result": "duplicate_or_stale", "key": key, "latest_key": latest_key}

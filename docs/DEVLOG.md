@@ -61,3 +61,8 @@ STEP 2: simulation.py 작성 및 센서 기록 생성, 범위/단위/재현성/�
 - 사용자 PC 381dca7에서 evaluate.py 성공, 10/10 테스트(0.176s), demo 실제 10초 간격 3 tick 검증. RF SHA256 565da9378788149d6b10d70e61544caaef0ccf0694263de1abe9d68831d80405. 제어 결과 기존과 일치.
 - HW1 Lambda/metadata 및 asset ZIP 구성 확인. 두 공간 GLB 경로 확인. 원본 개인/계정 자료는 공개하지 않음.
 - hw2/aws 생성/조회 어댑터, 공통 스키마, fake-S3 테스트 6개, 로컬 패키징 스크립트 작성. 실행/패키징 검증은 사용자 PC에서 필요. AWS 미접속/미생성. 상세 STEP5_PREP.md.
+
+## 2026-11-27 — AWS 수동 검증 및 동시성 보완
+
+- S3/GLB/IAM/Lambda 구축 및 생성/조회 수동 검증 성공. 두 공간 상태 연속성 PASS, 24개 조회 값 일치. 예약 동시 실행은 계정 할당량 10/10으로 실패. Scheduler 미생성.
+- S3 mutex 기반 생성 함수 및 2개 추가 fake-S3 테스트 작성. 상세 [STEP5_CONCURRENCY.md](STEP5_CONCURRENCY.md). 수정 버전 실행/재배포/실제 잠금 테스트 미완료.

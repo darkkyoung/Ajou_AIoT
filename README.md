@@ -57,3 +57,7 @@ py -3.13 hw2/control.py --mode demo --steps 3
 ```
 
 STEP 3의 selected_model.json 필요. 결과는 hw2/results/step4/. control.py의 live/demo는 로컬 폐루프 모드이며 AWS 기능은 아니다.
+
+## STEP 5 AWS 수동 검증
+
+생성/조회 Lambda 실제 실행 및 S3 상태 연속성 검증 성공. 계정 동시성 제한 대응 코드 작성; [동시성 보완 및 재배포](docs/STEP5_CONCURRENCY.md). Scheduler와 TwinMaker/Grafana 실제 연동은 미완료.

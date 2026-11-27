@@ -28,7 +28,7 @@ explorer .\hw2\aws\dist
 
 ## 설계
 - 일반 버킷 S3의 sensor-data/ticks/YYYYMMDDTHHMMSSZ.json에 매 tick 두 공간 관측/제어 및 다음 상태를 한 객체로 저장. 마지막 객체에서 상태 복원. 상태 파일을 따로 쓰지 않는다.
-- 단일 생성 Lambda, 예약 동시 실행(reserved concurrency)=1 필수. 다른 writer 금지. 동일/과거 slot 재호출은 skip, IfNoneMatch=*로 덮어쓰기 방지. 실패한 호출은 재시도 가능. 누락된 slot을 소급 생성하지 않고 성공한 호출당 가상 1분만 증가. 전체 키 목록 검색은 과제 규모 한정; 장기 운영에는 인덱스/상태 저장 설계 필요.
+- 초기 설계는 예약 동시 실행 1이었으나 계정 할당량으로 설정 불가. [동시성 보완](STEP5_CONCURRENCY.md)의 S3 mutex 방식으로 대체. 다른 writer 금지. 동일/과거 slot 재호출은 skip, IfNoneMatch=*로 덮어쓰기 방지. 실패한 호출은 재시도 가능. 누락된 slot을 소급 생성하지 않고 성공한 호출당 가상 1분만 증가. 전체 키 목록 검색은 과제 규모 한정; 장기 운영에는 인덱스/상태 저장 설계 필요.
 - live: Scheduler rate(1 minute), payload {"mode":"live","scheduled_time":"<aws.scheduler.scheduled-time>"}, FlexibleTimeWindow OFF. 데모는 Scheduler 비활성/실행 종료 확인 후 10초 간격 별도 동기 호출을 사용. Scheduler 자체의 10초 rate는 사용하지 않는다. mode 혼합 동시 실행 금지.
 - timestamp는 정렬용 UTC slot; recorded_at은 실제 호출 시각, simulated_at은 가상 시간. 이전 환기 출력과 이번 결정 출력 구분.
 - Reader DataReaderByEntity: classroom-01/computerlab-01, air_quality, 시간 범위/선택 속성/정렬/커서 페이지네이션. 최대 7일 조회, 250 samples/page. interpolation 및 propertyFilters는 미지원. 기본 범위 30분. Grafana는 30분 조회 및 10초 갱신으로 시작하되 실제 동작 검증 필요.

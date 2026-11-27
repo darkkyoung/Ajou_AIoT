@@ -1,14 +1,21 @@
 """Offline fake-S3 integration tests, no credentials or boto3 required."""
+import hashlib
 import io
 import json
 import unittest
 from datetime import datetime, timedelta, timezone
 
-from generate import tick
+from unittest.mock import patch
+from generate import LOCK_KEY, tick
 from reader import read
 
 MODEL = {"kind": "linear_regression", "coef": [0, 0, 0, 0, 0], "intercept": 1100}
 START = datetime(2026, 11, 26, 23, 59, 50, tzinfo=timezone.utc)
+
+
+class FakeS3Error(Exception):
+    def __init__(self, code):
+        self.response = {"Error": {"Code": code}}
 
 
 class FakeS3:
@@ -22,9 +29,18 @@ class FakeS3:
     def get_object(self, Bucket, Key):
         return {"Body": io.BytesIO(self.data[Key])}
     def put_object(self, Bucket, Key, Body, ContentType, IfNoneMatch):
-        if IfNoneMatch != "*" or Key in self.data:
-            raise AssertionError("Unexpected overwrite")
+        if IfNoneMatch != "*":
+            raise AssertionError("Expected conditional write")
+        if Key in self.data:
+            raise FakeS3Error("PreconditionFailed")
         self.data[Key] = Body
+        return {"ETag": self.etag(Key)}
+    def etag(self, Key):
+        return '"' + hashlib.sha256(self.data[Key]).hexdigest() + '"'
+    def delete_object(self, Bucket, Key, IfMatch):
+        if Key not in self.data or IfMatch != self.etag(Key):
+            raise FakeS3Error("PreconditionFailed")
+        del self.data[Key]
 
 
 class CloudTests(unittest.TestCase):
@@ -76,6 +92,28 @@ class CloudTests(unittest.TestCase):
                 result = self.request(maxResults=2, orderByTime=order, nextToken=result["nextToken"])
             self.assertEqual(len(set(times)), 5)
             self.assertEqual(times, sorted(times, reverse=order=="DESCENDING"))
+    def test_lock_blocks_different_slots_and_preserves_owner(self):
+        lock = self.s3.put_object(Bucket="test", Key=LOCK_KEY,
+                                  Body=b"other owner", ContentType="application/json",
+                                  IfNoneMatch="*")
+        self.assertEqual(self.emit(0)["result"], "busy")
+        self.assertEqual(self.emit(10)["result"], "busy")
+        self.assertEqual(self.s3.data[LOCK_KEY], b"other owner")
+        self.assertEqual(len(self.s3.data), 1)
+        self.s3.delete_object(Bucket="test", Key=LOCK_KEY, IfMatch=lock["ETag"])
+        self.assertEqual(self.emit(20)["minute"], 0)
+        self.assertNotIn(LOCK_KEY, self.s3.data)
+
+    def test_lock_released_after_failure_and_retry(self):
+        with patch("generate.step_room", side_effect=RuntimeError("injected")):
+            with self.assertRaises(RuntimeError):
+                self.emit()
+        self.assertEqual(self.s3.data, {})
+        self.assertEqual(self.emit()["minute"], 0)
+        self.assertNotIn(LOCK_KEY, self.s3.data)
+        self.assertEqual(self.emit(1)["result"], "duplicate_or_stale")
+        self.assertNotIn(LOCK_KEY, self.s3.data)
+
     def test_unknown_and_empty(self):
         self.assertEqual(self.request(entityId="unknown"), {"propertyValues":[]})
         self.assertEqual(self.request()["propertyValues"][0]["values"], [])
